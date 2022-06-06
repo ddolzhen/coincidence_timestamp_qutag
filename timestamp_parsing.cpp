@@ -292,7 +292,8 @@ int main(int argc, char * argv[])
 
       time_t now = time(0);
       std::cout<< ctime(&now)<<std::endl;
-      std::cout<< argc<<std::endl;
+      //std::cout<< argc<<std::endl;
+      
       if (argc != 4 )
       {
             std::cout<<"USAGE: ./timestamp_parsing FILE_PREFIX FILE_MIN FILE_MAX"<<std::endl;
@@ -369,5 +370,9 @@ int main(int argc, char * argv[])
       usleep(1000);
 
 
+      
+      std::cout<<"START:"<< ctime(&now)<<std::endl;
+      now = time(0);
+      std::cout<<"END:"<< ctime(&now)<<std::endl;
       
 }
