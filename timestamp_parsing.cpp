@@ -3,6 +3,8 @@
 #include <fstream>
 #include <unistd.h>
 #include "npy.hpp"
+#include <ctime>
+
 
 using namespace std;
 
@@ -287,7 +289,9 @@ unsigned int recordPairs(vector<long long> *timestamps, vector <long long> *h12,
 
 int main(int argc, char * argv[])
 {
-      
+
+      time_t now = time(0);
+      std::cout<< ctime(&now)<<std::endl;
       std::cout<< argc<<std::endl;
       if (argc != 4 )
       {
@@ -363,7 +367,6 @@ int main(int argc, char * argv[])
       shape ={{(*h34).size()/2,2}};
       npy::SaveArrayAsNumpy("pairs3_4.npy",false,shape.size(),shape.data(),(*h34));
       usleep(1000);
-      //std::cout<<timestamps[0][1]<<" "<< timestamps[2][1]<<" "<< timestamps[2][1]<<" "<< timestamps[3][1]<<std::endl;
 
 
       
