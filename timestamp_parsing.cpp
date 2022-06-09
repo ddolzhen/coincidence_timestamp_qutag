@@ -281,6 +281,92 @@ unsigned int recordPairs(vector<long long> *timestamps, vector <long long> *h12,
 
 
 
+void binTimeStamps(long long time_interval,vector<long long> *timestamps,vector <long long> *frequencies,vector<long long> *bin_edges)
+{
+      if (bin_edges->size()==0)
+      {
+            // First timestamps to load, initialize bin_edges with the lowest timestamp
+            long long first_edge=0;
+            if (timestamps[0][1]<timestamps[1][1] && timestamps[0][1]<timestamps[2][1] && timestamps[0][1]<timestamps[3][1])
+            {
+                  first_edge=timestamps[0][1];
+            }else if (timestamps[1][1]<timestamps[0][1] && timestamps[1][1]<timestamps[2][1] && timestamps[1][1]<timestamps[3][1])
+            {
+                  first_edge=timestamps[1][1];
+            }else if (timestamps[2][1]<timestamps[0][1] && timestamps[2][1]<timestamps[1][1] && timestamps[2][1]<timestamps[3][1])
+            {
+                  first_edge=timestamps[2][1];
+            }else
+            {
+                  first_edge=timestamps[1][1];
+            }
+            bin_edges->push_back(first_edge);
+      }
+
+      unsigned int index[4];
+      index[0]=1;
+      index[1]=1;
+      index[2]=1;
+      index[3]=1;
+      long long time_index=bin_edges->back();
+
+
+
+      for (int channel=1;channel<=4;channel++)
+      {
+            long long frequency=0;
+
+            while (timestamps[channel-1][index[channel-1]] < time_index)
+            {
+                  if (timestamps[channel-1][index[channel-1]] < time_index && timestamps[channel-1][index[channel-1]] > time_index - time_interval)
+                  {
+                        long long freq=frequencies[channel-1].back()+1;
+                        frequencies[channel-1].pop_back();
+                        frequencies[channel-1].push_back(freq);
+                  }
+                  index[channel-1]++;
+                  
+
+
+
+            }
+      }
+
+
+
+      
+
+
+      while (index[0]< timestamps[0].size() ||  index[1] < timestamps[1].size() || index[2] < timestamps[2].size() || index[3] < timestamps[3].size())
+      {
+            for (int channel=1;channel<=4;channel++)
+            {
+                  long long frequency=0;
+
+                  while (timestamps[channel-1][index[channel-1]] < time_index)
+                  {
+                        index[channel-1]++;
+                  }
+            
+
+
+
+                  while ( timestamps[channel-1][index[channel-1]] >= time_index &&  timestamps[channel-1][index[channel-1]]  < time_index+time_interval && index[channel-1]<timestamps[channel-1].size())
+                  {
+                        frequency++;
+                        index[channel-1]++;
+                  }
+                  frequencies[channel-1].push_back(frequency);
+            }
+            time_index+=time_interval;
+            bin_edges->push_back(time_index);
+      }
+
+
+
+
+
+}
 
 
 
@@ -311,8 +397,10 @@ int main(int argc, char * argv[])
       int file_min=FILE_MIN;
       int file_max=FILE_MAX;*/
 
-
-
+      vector <long long> *bin_edges;
+      bin_edges=new vector<long long>;
+      vector <long long> *frequencies;
+      frequencies=new vector<long long> [4];
       vector <long long> *timestamps;
       vector <long long> * h12,*h13,*h14,*h23,*h24,*h34;
       h12=new vector <long long>;
@@ -331,6 +419,9 @@ int main(int argc, char * argv[])
             std::cout<<'\t'<<"Processing file "<< file_prefix << file_num<<".bin"<<std::endl;
             timestamps=new vector<long long> [4];
             load_bin(file_prefix+std::to_string(file_num)+".bin",timestamps);
+
+            binTimeStamps(1e12,timestamps,frequencies,bin_edges);
+
             std::cout<< '\t'<<"Finding pairs in timestamps for file "<< file_prefix << file_num<<".bin"<<std::endl<<std::endl;
             recordPairs(timestamps,h12,h13,h14,h23,h24,h34);
 
@@ -367,12 +458,32 @@ int main(int argc, char * argv[])
 
       shape ={{(*h34).size()/2,2}};
       npy::SaveArrayAsNumpy("pairs3_4.npy",false,shape.size(),shape.data(),(*h34));
-      usleep(1000);
+
+ 
 
 
-      
+      std::vector<long long> frequencies_flat;
+      for (long long i = 0;i<frequencies[0].size();i++)
+      {
+            frequencies_flat.push_back(bin_edges->at(i));
+            frequencies_flat.push_back(frequencies[0][i]);
+            frequencies_flat.push_back(frequencies[1][i]);
+            frequencies_flat.push_back(frequencies[2][i]);
+            frequencies_flat.push_back(frequencies[3][i]);
+      }
+
+
+      shape ={{frequencies[0].size(),5}};
+      npy::SaveArrayAsNumpy("single_channel_frequencies.npy",false,shape.size(),shape.data(),frequencies_flat);
+
+
+  
       std::cout<<"START:"<< ctime(&now)<<std::endl;
       now = time(0);
       std::cout<<"END:"<< ctime(&now)<<std::endl;
       
+
+      std::cout<<frequencies[0].size() <<frequencies[1].size() << bin_edges->size();
+
+
 }
