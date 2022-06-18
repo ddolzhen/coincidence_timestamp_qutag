@@ -14,7 +14,7 @@ Produces 6 2-column .npy  files for pairs (each file is a channel pair) and 1 5-
 # Program flow
 
 ### Loading data 
-During the execution of the load_bin() function, the program will iteratively proceed through the .dat file, decoding the timestamps and channel values from binary and pushing them into their respective channel vectors. There are four vectors for each of the channels respectively. While the program is iterating through the file, each entry will also be checked against the previous entry in the same channel. If the two entries are too close, the latter timestamp will be discarded and deemed as an afterpulse. Afterpulse window width is defined in picoseconds in the beginning of the .cpp file (#define AP_TIME 30e3 for 30ns) and can be adjusted before compilation.
+During the execution of the load_bin() function, the program will iteratively proceed through the .dat file, decoding the timestamps and channel values from binary and pushing them into their respective channel vectors. There are four vectors for each of the channels respectively. While the program is iterating through the file, each entry will also be checked against the previous entry in the same channel. If the two entries are too close, the latter timestamp will be discarded and deemed as an afterpulse. Afterpulse window width is defined in picoseconds in the beginning of the .cpp file (`#define AP_TIME 30e3` for 30ns) and can be adjusted before compilation.
 
 ### Getting pairs
 After the data is loaded, the program proceeds to find pairs of timestamp entries between separate channels. This happens in 3 loops
@@ -28,7 +28,7 @@ Iterate through timestamp_ch2 and look for the nearest entries between ch2 and c
 ##### Loop 3
 Iterate through timestamp_ch3 and look for the nearest entries between ch3 and ch4
 
-If timestamp delays between two different channels are found to be within the WINDOW_TIME variable (#define WINDOW_TIME 20e3 in the beginning of the file), this pair of timestamps is recorded as 2 variables : timestamp of the lower-valued channel and the time delay to the higher-valued channel. Note that time delay can be either positive or negative.
+If timestamp delays between two different channels are found to be within the WINDOW_TIME variable (`#define WINDOW_TIME 20e3` in the beginning of the file), this pair of timestamps is recorded as 2 variables : timestamp of the lower-valued channel and the time delay to the higher-valued channel. Note that time delay can be either positive or negative.
 
 ### Singles-rates
 During binTimeStamps(), the program iterates through the timestamps on all channels while binning them into 1s (by default) wide chunks. This produces data for creating histograms with 1s binning. Bin width can be adjusted
