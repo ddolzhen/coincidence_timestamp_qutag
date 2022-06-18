@@ -34,7 +34,7 @@ If timestamp delays between two different channels are found to be within the WI
 During binTimeStamps(), the program iterates through the timestamps on all channels while binning them into 1s (by default) wide chunks. This produces data for creating histograms with 1s binning. Bin width can be adjusted
 
 # Produced Files
-The program produces 6 pair files (pairs1__2.npy,pairs1__3.npy,pairs1__4.npy,pairs2__3.npy,pairs2__4.npy,pairs3__4.npy) and 1 single rates binned histogram file (single_channel_frequencies.npy). .npy is the format prefered by NumPy for data storage, so one could use `data = np.load('data.npy')` to load it in Python relatively quickly
+The program produces 6 pair files (pairs1__2.npy,pairs1__3.npy,pairs1__4.npy,pairs2__3.npy,pairs2__4.npy,pairs3__4.npy) and 1 single rates binned histogram file (single_channel_frequencies.npy). .npy is the format prefered by NumPy for data storage, so one could use `data=np.load('data.npy')` to load it in Python relatively quickly
 
 ##### Pairs files
 2 columns. Column 1 is timestamp of the first channel in the two-channel pair. Column 2 is the time-delay to the second labeled channel. Both measured in picoseconds. Data is time ordered
