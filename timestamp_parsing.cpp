@@ -13,10 +13,10 @@ using namespace std;
 #define AP_TIME 30e3 //Afterpulse time, also in ps
 
 
-#define PREFIX "ArLamp_30min_sweep_2Lamps_"
+#define PREFIX "jun19_"
 
 #define FILE_MIN 0
-#define FILE_MAX 2
+#define FILE_MAX 1
 
 //Loads data into a size-4 array of timestamp vectors (each vector correlating to a channel)
 void load_bin(std::string filename, vector<long long> * timestamps)
@@ -298,7 +298,7 @@ void binTimeStamps(long long time_interval,vector<long long> *timestamps,vector 
                   first_edge=timestamps[2][1];
             }else
             {
-                  first_edge=timestamps[1][1];
+                  first_edge=timestamps[3][1];
             }
             bin_edges->push_back(first_edge);
       }
@@ -376,27 +376,29 @@ void binTimeStamps(long long time_interval,vector<long long> *timestamps,vector 
 int main(int argc, char * argv[])
 {
 
+
+
       time_t now = time(0);
       std::cout<< ctime(&now)<<std::endl;
-      //std::cout<< argc<<std::endl;
       
       if (argc != 4 )
       {
             std::cout<<"USAGE: ./timestamp_parsing FILE_PREFIX FILE_MIN FILE_MAX"<<std::endl;
             return 0xBADBEEF;
       }
-
+      
       std::string file_prefix(argv[1]);
 
       int file_min=std::stoi(argv[2]);
       int file_max=std::stoi(argv[3]);
+      
 
-/*
+     /*
       std::string file_prefix(PREFIX);
 
       int file_min=FILE_MIN;
-      int file_max=FILE_MAX;*/
-
+      int file_max=FILE_MAX;
+      */
       vector <long long> *bin_edges;
       bin_edges=new vector<long long>;
       vector <long long> *frequencies;
@@ -458,7 +460,6 @@ int main(int argc, char * argv[])
 
       shape ={{(*h34).size()/2,2}};
       npy::SaveArrayAsNumpy("pairs3_4.npy",false,shape.size(),shape.data(),(*h34));
-
  
 
 
@@ -485,5 +486,6 @@ int main(int argc, char * argv[])
 
       std::cout<<frequencies[0].size() <<frequencies[1].size() << bin_edges->size();
 
+      return 0;
 
 }
