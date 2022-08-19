@@ -14,7 +14,10 @@ Produces 6 2-column .npy  files for pairs (each file is a channel pair) and 1 5-
 # Program flow
 
 ### Loading data 
-During the execution of the load_bin() function, the program will iteratively proceed through the .dat file, decoding the timestamps and channel values from binary and pushing them into their respective channel vectors. There are four vectors for each of the channels respectively. While the program is iterating through the file, each entry will also be checked against the previous entry in the same channel. If the two entries are too close, the latter timestamp will be discarded and deemed as an afterpulse. Afterpulse window width is defined in picoseconds in the beginning of the .cpp file (`#define AP_TIME 30e3` for 30ns) and can be adjusted before compilation.
+During the execution of the load_bin() function, the program will iteratively proceed through the .dat file, decoding the timestamps and channel values from binary and pushing them into their respective channel vectors. There are four vectors for each of the channels respectively. 
+
+##### Afterpulses
+While the program is iterating through the file, each entry will also be checked against the previous entry in the same channel. If the two entries are too close, the latter timestamp will be discarded and deemed as an afterpulse. Afterpulse window width is defined in picoseconds in the beginning of the .cpp file (`#define AP_TIME 30e3` for 30ns) and can be adjusted before compilation.
 
 ### Getting pairs
 After the data is loaded, the program proceeds to find pairs of timestamp entries between separate channels. This happens in 3 loops
